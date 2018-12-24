@@ -1,3 +1,6 @@
+### Code editor ###
+.vscode
+
 ### OSX ###
 .DS_Store
 .AppleDouble
@@ -27,7 +30,7 @@ Temporary Items
 ### Python ###
 
 # Virtual Environment
-tcvenv/
+teddycrepineauvenv/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
