@@ -11,12 +11,21 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import environ
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = environ.Path(__file__) - 3
 APPS_DIR = BASE_DIR.path('project')
 
 env = environ.Env()
+
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+
+if READ_DOT_ENV_FILE:
+    env_file = str(BASE_DIR.path('.env'))
+    print(f'Loading {env_file}')
+    env.read_env(env_file)
+    print('The .env file has been loaded, see base.py for more information')
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,9 +49,11 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'rest_framework',
 )
 
 LOCAL_APPS = (
+    'project.api',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -82,12 +93,13 @@ WSGI_APPLICATION = 'teddycrepineau.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR.path('db.sqlite3')),
-    }
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': str(BASE_DIR.path('db.sqlite3')),
+#     }
+    'default': env.db('TC_POSTGRES_DB'
+    , default="postgresql://teddycrepineau@localhost/teddycrepineau")
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -137,10 +149,20 @@ STATICFILES_FINDERS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(APPS_DIR.path('media'))
 
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 
-if READ_DOT_ENV_FILE:
-    env_file = str(BASE_DIR.path('.env'))
-    print(f'Loading {env_file}')
-    env.read_env(env_file)
-    print('The .env file has been loaded, see base.py for more information')
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    'ALGORITHM': 'HS256',
+    
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIN': 'user_id',
+}
