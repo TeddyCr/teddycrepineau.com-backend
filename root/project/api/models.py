@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from  django.contrib.postgres.fields import ArrayField
 from teddycrepineau import settings
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
 
 class Posts(models.Model):
     author_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
@@ -65,3 +68,69 @@ class Profile(models.Model):
         db_table = 'profiles'
         verbose_name = 'Profile'
         verbose_name_plural = 'Profiles'
+
+class UserManager(BaseUserManager):
+    def create_super_user(self, email, password=None, **kwargs):
+        if not email:
+            raise ValueError('User must have a valid email address')
+
+        if not kwargs.get('username'):
+            raise ValueError('User must have a valid username')
+
+        account = self.model(
+            email=self.normalize_email(email),
+            username=kwargs.get('username')
+        )
+
+        account.set_password(password)
+        account.is_admin = True
+        account.is_active = True
+        account.is_staff = True
+        account.save()
+
+        return account
+
+
+class Users(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+    username = models.CharField(
+        max_length=40,
+        unique=True,
+    )
+    slug = models.SlugField(max_length=60)
+
+    name = models.CharField(
+        verbose_name='Full Name',
+        max_length=120,
+        blank=True
+    )
+    
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    
+
+
+

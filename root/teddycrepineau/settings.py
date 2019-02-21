@@ -102,6 +102,20 @@ DATABASES = {
     }
 }
 
+# Uncomment for dev testing
+# -------------------------
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'teddycrepineau_development',
+#         'USER': 'teddycrepineau',
+#         'PASSWORD': '',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
