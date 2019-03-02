@@ -17,4 +17,5 @@ urlpatterns = [
     re_path('token/$', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     re_path('token/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
     re_path('token/verify/$', TokenVerifyView.as_view(), name='token_verify'),
+    path('summernote/', include('django_summernote.urls')),
 ]

@@ -4,12 +4,13 @@ from  django.contrib.postgres.fields import ArrayField
 from teddycrepineau import settings
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser
+from tinymce.models import HTMLField
 from django.db import models
 
 class Posts(models.Model):
     author_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     title = models.CharField(max_length=100)
-    content = models.TextField()
+    content = HTMLField()
     tags = ArrayField(
             models.CharField(max_length=20, blank=True
             , help_text="Enter a tag related to your post"),
@@ -35,8 +36,8 @@ class Posts(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    short_bio = models.TextField(blank=True, null=True)
-    long_bio = models.TextField(blank=True, null=True)
+    short_bio = HTMLField(blank=True, null=True)
+    long_bio = HTMLField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='uploads/%Y/%m/%d/',
                                         blank=True, null=True)
 

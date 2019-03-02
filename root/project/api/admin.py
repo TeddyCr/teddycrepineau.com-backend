@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from project.api.models import Posts, Profile
-from django_summernote.admin import SummernoteModelAdmin
+# from django_summernote.admin import SummernoteModelAdmin
 from django.contrib.auth.models import User
 
 def change_is_published_status(modeladmin, request, queryset):
@@ -15,7 +15,7 @@ def change_is_published_status(modeladmin, request, queryset):
 
 change_is_published_status.short_description = 'Update post status'
 
-class PostAdmin(SummernoteModelAdmin):
+class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'creation_date'
     list_display = ('title', 'author_id', 'tags','is_published',
                     'creation_date','last_modified')
@@ -23,7 +23,7 @@ class PostAdmin(SummernoteModelAdmin):
     list_per_page = 20
     search_fields = ['title']
     actions = [change_is_published_status]
-    summernote_fields = ('content',)
+    # summernote_fields = ('content',)
     prepopulated_fields = {"slug": ("title",)}
 
 class ProfileAdmin(admin.ModelAdmin):

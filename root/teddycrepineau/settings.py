@@ -48,7 +48,8 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'rest_framework',
-    'django_summernote',
+    'tinymce',
+    'gunicorn',
 )
 
 LOCAL_APPS = (
@@ -162,7 +163,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',    
 )
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(APPS_DIR, 'media')
+MEDIA_ROOT = os.path.join(APPS_DIR, 'media/')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -180,4 +181,12 @@ SIMPLE_JWT = {
     
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIN': 'user_id',
+}
+
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table,spellchecker,paste,searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+    'min_height':450,
 }
